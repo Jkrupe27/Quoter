@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shopper Approved Quote</title>
+  <style>
+    /* RESET */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* BODY BACKGROUND */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #f8f9fa, #e9ecef);
+      color: #f1f3f5;
+      padding: 40px;
+      min-height: 100vh;
+    }
+
+    /* CONTAINER */
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: linear-gradient(145deg, #0a192f, #12284c);
+      background-size: 400% 400%;
+      animation: pearlShimmer 12s ease infinite;
+      padding: 60px 70px;
+      border-radius: 18px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* CONTAINER SHIMMER */
+    @keyframes pearlShimmer {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    /* LOGO */
+    .container::before {
+      content: '';
+      background: url('shopper-approved-logo.png') no-repeat center;
+      background-size: 120px;
+      width: 120px;
+      height: 50px;
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0.9;
+    }
+
+    /* GLIMMER EFFECT */
+    .container::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -75%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(120deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 80%);
+      transform: skewX(-25deg);
+      animation: shimmer 9s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { left: -75%; }
+      50% { left: 125%; }
+      100% { left: -75%; }
+    }
+
+    /* HEADINGS */
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #f8f9fa;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+    }
+
+    h2 {
+      margin-top: 30px;
+      margin-bottom: 10px;
+      font-size: 1.4rem;
+      color: #ffffff;
+    }
+
+    /* LABELS */
+    label {
+      display: block;
+      margin-top: 20px;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #f1f3f5;
+    }
+
+    /* INPUTS & SELECTS */
+    input,
+    select {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #495057;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      background: #f8f9fa;
+      color: #212529;
+      transition: all 0.3s ease;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #ffa726;
+      outline: none;
+      box-shadow: 0 0 8px rgba(255, 165, 0, 0.5);
+    }
+
+    /* CHECKBOX GROUP */
+    .checkbox-group {
+      margin-top: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .checkbox-group label {
+      flex: 1 1 30%;
+      margin-bottom: 10px;
+      cursor: pointer;
+      color: #e2e6ea;
+    }
+
+    .checkbox-group input {
+      margin-right: 8px;
+    }
+
+    /* SUBMIT BUTTON & CLEAR ALL */
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 30px;
+    }
+
+    button#generateQuote {
+      width: 70%;
+      background-color: #0d47a1;
+      color: #f8f9fa;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    button#generateQuote:hover {
+      background-color: #ff6f00;
+      box-shadow: 0 0 15px #ff6f00aa;
+    }
+
+    button#clearAll {
+      width: 25%;
+      background-color: #4a4a4a;
+      color: #f8f9fa;
+      padding: 8px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.3s ease, background-color 0.3s ease;
+    }
+
+    button#clearAll:hover {
+      opacity: 1;
+      background-color: #ff4444;
+    }
+
+    /* QUOTE SUMMARY */
+    #quoteSummary {
+      margin-top: 50px;
+      padding: 30px;
+      background: linear-gradient(135deg, #1c2331, #26374d);
+      border-radius: 16px;
+      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4);
+      animation: fadeIn 1s ease;
+    }
+
+    #quoteSummary h2 {
+      color: #ffa726;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    #quoteSummary p, #quoteSummary ul, #quoteSummary h3 {
+      margin-bottom: 15px;
+      font-size: 1.15rem;
+      color: #f8f9fa;
+    }
+
+    #quoteSummary ul {
+      list-style: disc inside;
+    }
+
+    #runningTotal {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #ffa726;
+    }
+
+    /* NICE ENTRY FADE */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Shopper Approved Quote</h1>
+
+    <div id="quoteForm">
+      <h2>Client Information</h2>
+      <label>Company Name:</label>
+      <input type="text" id="companyName" required>
+
+      <label>Contact Name:</label>
+      <input type="text" id="contactName" required>
+
+      <h2>Traffic & Contract Details</h2>
+      <label>Monthly Page Views:</label>
+      <select id="pageViews" required>
+        <option value="">Select</option>
+        <option value="0-50000">0–50,000</option>
+        <option value="50001-100000">50,001–100,000</option>
+        <option value="100001-150000">100,001–150,000</option>
+        <option value="150001-200000">150,001–200,000</option>
+        <option value="200001-250000">200,001–250,000</option>
+        <option value="250001-300000">250,001–300,000</option>
+        <option value="300001-350000">300,001–350,000</option>
+        <option value="350001-400000">350,001–400,000</option>
+        <option value="400001-450000">400,001–450,000</option>
+        <option value="450001-500000">450,001–500,000</option>
+      </select>
+
+      <label>Monthly Orders:</label>
+      <select id="monthlyOrders" required>
+        <option value="">Select</option>
+        <option value="0-100">0–100</option>
+        <option value="101-500">101–500</option>
+        <option value="501-1000">501–1000</option>
+        <option value="1001-1500">1001–1500</option>
+        <option value="1501-2000">1501–2000</option>
+        <option value="2001-2500">2001–2500</option>
+        <option value="2501-3000">2501–3000</option>
+        <option value="3001-3500">3001–3500</option>
+        <option value="3501-4000">3501–4000</option>
+        <option value="4001-4500">4001–4500</option>
+        <option value="4501-5000">4501–5000</option>
+      </select>
+
+      <label>Contract Option:</label>
+      <select id="contractOption" required>
+        <option value="">Select</option>
+        <option value="contract">Contract (10% savings)</option>
+        <option value="noContract">No Contract</option>
+      </select>
+
+      <label>Billing Cycle:</label>
+      <select id="billingCycle" required>
+        <option value="">Select</option>
+        <option value="monthly">Monthly</option>
+        <option value="quarterly">Quarterly</option>
+        <option value="biannual">6-Month (Bi-Annual)</option>
+        <option value="yearly">Yearly</option>
+        <option value="2year">2-Year</option>
+      </select>
+
+      <div id="productsSection" style="display:none;">
+        <h2>Select Products</h2>
+
+        <div class="checkbox-group">
+          <label><input type="checkbox" id="sellerRatings"> Seller Ratings</label>
+          <label><input type="checkbox" id="productReviews"> Product Reviews</label>
+          <label><input type="checkbox" id="reviewDestinations"> Review Destinations</label>
+          <label><input type="checkbox" id="websiteSecurity"> Website Security</label>
+          <label><input type="checkbox" id="sjDirect"> SJ Direct Visits/Sessions</label>
+          <label><input type="checkbox" id="socialEvidence"> Social Evidence</label>
+          <label><input type="checkbox" id="walmartSyndication"> Walmart Syndication</label>
+          <label><input type="checkbox" id="qaStarter"> Q&A Starter</label>
+          <label><input type="checkbox" id="qaBusiness"> Q&A Business</label>
+          <label><input type="checkbox" id="qaAdvanced"> Q&A Advanced</label>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button type="button" id="generateQuote">Generate Quote</button>
+        <button type="button" id="clearAll">Clear All</button>
+      </div>
+    </div>
+
+    <div id="quoteSummary" style="display:none;">
+      <!-- Final quote will appear here -->
+    </div>
+
+  </div>
+</body>
+</html>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('quoteForm');
+  const productsSection = document.getElementById('productsSection');
+  const psBundleWrapper = document.getElementById('psBundleWrapper');
+  const sellerRatingsCheckbox = document.getElementById('sellerRatings');
+  const quoteSummary = document.getElementById('quoteSummary');
+
+  const pricingData = 
+  baseModules: {
+    quarterlyContract: [
+      { min: 0,    max: 100,   seller: 566.78, product: 492.53, productWithSeller: 308.00, review: 245.03, security: 272.25, sessions: 121.00, social: 294.53 },
+      { min: 101,  max: 500,   seller: 690.53, product: 616.28, productWithSeller: 385.00, review: 294.53, security: 272.25, sessions: 145.75, social: 418.28 },
+      { min: 501,  max: 1000,  seller: 814.28, product: 740.03, productWithSeller: 463.00, review: 319.28, security: 272.25, sessions: 162.25, social: 542.03 },
+      { min: 1001, max: 1500,  seller: 1061.78, product: 987.53, productWithSeller: 617.00, review: 368.78, security: 272.25, sessions: 187.00, social: 665.78 },
+      { min: 1501, max: 2000,  seller: 1309.28, product: 1235.03, productWithSeller: 772.00, review: 418.28, security: 272.25, sessions: 211.75, social: 740.03 },
+      { min: 2001, max: 2500,  seller: 1556.78, product: 1482.53, productWithSeller: 927.00, review: 467.78, security: 272.25, sessions: 231.00, social: 863.78 },
+      { min: 2501, max: 3000,  seller: 1804.28, product: 1730.03, productWithSeller: 1081.00, review: 517.28, security: 272.25, sessions: 261.25, social: 987.53 },
+      { min: 3001, max: 3500,  seller: 2051.78, product: 1977.53, productWithSeller: 1236.00, review: 566.78, security: 272.25, sessions: 286.00, social: 1111.28 },
+      { min: 3501, max: 4000,  seller: 2299.28, product: 2225.03, productWithSeller: 1391.00, review: 616.28, security: 272.25, sessions: 310.75, social: 1235.03 },
+      { min: 4001, max: 4500,  seller: 2546.78, product: 2472.53, productWithSeller: 1545.00, review: 665.78, security: 272.25, sessions: 335.50, social: 1358.78 },
+      { min: 4501, max: 5000,  seller: 2794.28, product: 2720.03, productWithSeller: 1700.00, review: 715.28, security: 272.25, sessions: 360.25, social: 0.00 }
+    ],
+    quarterlyNoContract: [
+      { min: 0,    max: 100,   seller: 629.75, product: 547.25, productWithSeller: 0.00, review: 272.25, security: 272.25, sessions: 134.75, social: 327.25 },
+      { min: 101,  max: 500,   seller: 767.25, product: 684.75, productWithSeller: 0.00, review: 327.25, security: 272.25, sessions: 162.25, social: 464.75 },
+      { min: 501,  max: 1000,  seller: 904.75, product: 822.25, productWithSeller: 0.00, review: 354.75, security: 272.25, sessions: 177.38, social: 602.25 },
+      { min: 1001, max: 1500,  seller: 1179.75, product: 1097.25, productWithSeller: 0.00, review: 409.75, security: 272.25, sessions: 204.88, social: 739.75 },
+      { min: 1501, max: 2000,  seller: 1454.75, product: 1372.25, productWithSeller: 0.00, review: 464.75, security: 272.25, sessions: 232.38, social: 822.25 },
+      { min: 2001, max: 2500,  seller: 1729.75, product: 1647.25, productWithSeller: 0.00, review: 519.75, security: 272.25, sessions: 259.88, social: 959.75 },
+      { min: 2501, max: 3000,  seller: 2004.75, product: 1922.25, productWithSeller: 0.00, review: 574.75, security: 272.25, sessions: 287.38, social: 1097.25 },
+      { min: 3001, max: 3500,  seller: 2279.75, product: 2197.25, productWithSeller: 0.00, review: 629.75, security: 272.25, sessions: 314.88, social: 1234.75 },
+      { min: 3501, max: 4000,  seller: 2554.75, product: 2472.25, productWithSeller: 0.00, review: 684.75, security: 272.25, sessions: 342.38, social: 1372.25 },
+      { min: 4001, max: 4500,  seller: 2829.75, product: 2747.25, productWithSeller: 0.00, review: 739.75, security: 272.25, sessions: 369.88, social: 1509.75 },
+      { min: 4501, max: 5000,  seller: 3104.75, product: 3022.25, productWithSeller: 0.00, review: 794.75, security: 272.25, sessions: 397.38, social: 0.00 }
+    ],
+    monthlyNoContract: [
+      { min: 0,    max: 100,   seller: 229.00, product: 199.00, productWithSeller: 0.00, review: 99.00,  security: 99.00, sessions: 49.00,  social: 119.00 },
+      { min: 101,  max: 500,   seller: 279.00, product: 249.00, productWithSeller: 0.00, review: 119.00, security: 99.00, sessions: 59.00,  social: 169.00 },
+      { min: 501,  max: 1000,  seller: 329.00, product: 299.00, productWithSeller: 0.00, review: 129.00, security: 99.00, sessions: 65.00,  social: 219.00 },
+      { min: 1001, max: 1500,  seller: 429.00, product: 399.00, productWithSeller: 0.00, review: 149.00, security: 99.00, sessions: 75.00,  social: 269.00 },
+      { min: 1501, max: 2000,  seller: 529.00, product: 499.00, productWithSeller: 0.00, review: 169.00, security: 99.00, sessions: 85.00,  social: 299.00 },
+      { min: 2001, max: 2500,  seller: 629.00, product: 599.00, productWithSeller: 0.00, review: 189.00, security: 99.00, sessions: 95.00,  social: 349.00 },
+      { min: 2501, max: 3000,  seller: 729.00, product: 699.00, productWithSeller: 0.00, review: 209.00, security: 99.00, sessions: 105.00, social: 399.00 },
+      { min: 3001, max: 3500,  seller: 829.00, product: 799.00, productWithSeller: 0.00, review: 229.00, security: 99.00, sessions: 115.00, social: 449.00 },
+      { min: 3501, max: 4000,  seller: 929.00, product: 899.00, productWithSeller: 0.00, review: 249.00, security: 99.00, sessions: 125.00, social: 499.00 },
+      { min: 4001, max: 4500,  seller: 1029.00,product: 999.00, productWithSeller: 0.00, review: 269.00, security: 99.00, sessions: 135.00, social: 549.00 },
+      { min: 4501, max: 5000,  seller: 1129.00,product:1099.00, productWithSeller: 0.00, review: 289.00, security: 99.00, sessions: 145.00, social: 0.00 }
+    ],
+    monthlyContract: [
+      { min: 0,    max: 100,   seller: 206.00, product: 179.00, productWithSeller:119.00, review: 89.00, security: 99.00, sessions: 44.00, social: 107.00 },
+      { min: 101,  max: 500,   seller: 251.00, product: 224.00, productWithSeller:149.00, review:107.00, security: 99.00, sessions: 53.00, social: 152.00 },
+      { min: 501,  max: 1000,  seller: 296.00, product: 269.00, productWithSeller:179.00, review:116.00, security: 99.00, sessions: 59.00, social: 197.00 },
+      { min: 1001, max: 1500,  seller: 386.00, product: 359.00, productWithSeller:239.00, review:134.00, security: 99.00, sessions: 68.00, social: 242.00 },
+      { min: 1501, max: 2000,  seller: 476.00, product: 449.00, productWithSeller:299.00, review:152.00, security: 99.00, sessions: 77.00, social: 269.00 },
+      { min: 2001, max: 2500,  seller: 566.00, product: 539.00, productWithSeller:358.00, review:170.00, security: 99.00, sessions: 84.00, social: 314.00 },
+      { min: 2501, max: 3000,  seller: 656.00, product: 629.00, productWithSeller:418.00, review:188.00, security: 99.00, sessions: 95.00, social: 359.00 },
+      { min: 3001, max: 3500,  seller: 746.00, product: 719.00, productWithSeller:478.00, review:206.00, security: 99.00, sessions:104.00, social: 404.00 },
+      { min: 3501, max: 4000,  seller: 836.00, product: 809.00, productWithSeller:538.00, review:224.00, security: 99.00, sessions:113.00, social: 449.00 },
+      { min: 4001, max: 4500,  seller: 926.00, product: 899.00, productWithSeller:598.00, review:242.00, security: 99.00, sessions:122.00, social: 494.00 },
+      { min: 4501, max: 5000,  seller: 1016.00,product: 989.00, productWithSeller:658.00, review:260.00, security: 99.00, sessions:131.00, social: 0.00 }
+    ],
+    // NEW: Yearly - No Contract (17% Savings)
+    yearlyNoContract: [
+      { min: 0,    max: 100,   seller: 2290.00, product: 1990.00, productWithSeller: 0.00, review: 990.00,  security: 990.00, sessions: 499.00, social: 0.00 },
+      { min: 101,  max: 500,   seller: 2790.00, product: 2490.00, productWithSeller: 0.00, review:1190.00,  security: 990.00, sessions: 599.00, social: 0.00 },
+      { min: 501,  max: 1000,  seller: 3290.00, product: 2990.00, productWithSeller: 0.00, review:1290.00,  security: 990.00, sessions: 650.00, social: 0.00 },
+      { min: 1001, max: 1500,  seller: 4290.00, product: 3990.00, productWithSeller: 0.00, review:1490.00,  security: 990.00, sessions: 750.00, social: 0.00 },
+      { min: 1501, max: 2000,  seller: 5290.00, product: 4990.00, productWithSeller: 0.00, review:1690.00,  security: 990.00, sessions: 850.00, social: 0.00 },
+      { min: 2001, max: 2500,  seller: 6290.00, product: 5990.00, productWithSeller: 0.00, review:1890.00,  security: 990.00, sessions: 950.00, social: 0.00 },
+      { min: 2501, max: 3000,  seller: 7290.00, product: 6990.00, productWithSeller: 0.00, review:2090.00,  security: 990.00, sessions:1050.00, social: 0.00 },
+      { min: 3001, max: 3500,  seller: 8290.00, product: 7990.00, productWithSeller: 0.00, review:2290.00,  security: 990.00, sessions:1150.00, social: 0.00 },
+      { min: 3501, max: 4000,  seller: 9290.00, product: 8990.00, productWithSeller: 0.00, review:2490.00,  security: 990.00, sessions:1250.00, social: 0.00 },
+      { min: 4001, max: 4500,  seller:10290.00, product: 9990.00, productWithSeller: 0.00, review:2690.00,  security: 990.00, sessions:1350.00, social: 0.00 },
+      { min: 4501, max: 5000,  seller:11290.00, product:10990.00, productWithSeller: 0.00, review:2890.00,  security: 990.00, sessions:1450.00, social: 0.00 }
+    ]
+  },
+  addOns: {
+    walmartSyndication: [ { min: 0, max: 500000, price: 100.00 } ],
+    qaStarter:   [ { min: 0, max: Infinity, price: 139.00 } ],
+    qaBusiness:  [ { min: 0, max: Infinity, price: 379.00 } ],
+    qaAdvanced:  [ { min: 0, max: Infinity, price: 769.00 } ],
+    socialEvidence: [
+      { min: 0,      max: 50000,   price: 107.00 },
+      { min: 50001,  max: 100000,  price: 152.00 },
+      { min: 100001, max: 150000,  price: 197.00 },
+      { min: 150001, max: 200000,  price: 242.00 },
+      { min: 200001, max: 250000,  price: 269.00 },
+      { min: 250001, max: 300000,  price: 314.00 },
+      { min: 300001, max: 350000,  price: 359.00 },
+      { min: 350001, max: 400000,  price: 404.00 },
+      { min: 400001, max: 450000,  price: 449.00 },
+      { min: 450001, max: 500000,  price: 494.00 }
+    ]
+  },
+  trustGuard: {
+    totalWebsiteProtection: { monthly: 97.00, yearly: 970.00 },
+    ultimateProtection:      { monthly: 197.00, yearly: 1970.00 }
+  }
+};
+
+  };
+
+  function checkSelections() {
+    const pageViews = document.getElementById('pageViews').value;
+    const monthlyOrders = document.getElementById('monthlyOrders').value;
+    const contractOption = document.getElementById('contractOption').value;
+    const billingCycle = document.getElementById('billingCycle').value;
+    if (pageViews && monthlyOrders && contractOption && billingCycle) {
+      productsSection.style.display = 'block';
+    }
+  }
+
+  document.getElementById('pageViews').addEventListener('change', checkSelections);
+  document.getElementById('monthlyOrders').addEventListener('change', checkSelections);
+  document.getElementById('contractOption').addEventListener('change', checkSelections);
+  document.getElementById('billingCycle').addEventListener('change', checkSelections);
+
+  sellerRatingsCheckbox.addEventListener('change', function () {
+    psBundleWrapper.style.display = this.checked ? 'block' : 'none';
+  });
+
+  function getPriceFromBand(bands, value) {
+    const num = parseInt(value);
+    for (const band of bands) {
+      if (num >= band.min && num <= band.max) return band;
+    }
+    return null;
+  }
+
+  
+  function convertRangeToMidpoint(rangeString) {
+    const [min, max] = rangeString.split('-').map(Number);
+    return Math.round((min + max) / 2);
+  }
+
+document.getElementById('generateQuote').addEventListener('click', function (event) {
+    event.preventDefault();
+
+    const companyName = document.getElementById('companyName').value;
+    const contactName = document.getElementById('contactName').value;
+    const contractOption = document.getElementById('contractOption').value;
+    const billingCycle = document.getElementById('billingCycle').value;
+    const monthlyOrders = document.getElementById('monthlyOrders').value;
+    const pageViews = document.getElementById('pageViews').value;
+
+    const selectedProducts = [];
+
+    if (document.getElementById('sellerRatings').checked) selectedProducts.push('seller');
+    if (document.getElementById('productReviews').checked) selectedProducts.push('product');
+    if (document.getElementById('psBundle').checked) selectedProducts.push('productWithSeller');
+    if (document.getElementById('reviewDestinations').checked) selectedProducts.push('review');
+    if (document.getElementById('websiteSecurity').checked) selectedProducts.push('security');
+    if (document.getElementById('sjDirect').checked) selectedProducts.push('sessions');
+    if (document.getElementById('socialEvidence').checked) selectedProducts.push('social');
+    if (document.getElementById('walmartSyndication').checked) selectedProducts.push('walmartSyndication');
+    if (document.getElementById('qaStarter').checked) selectedProducts.push('qaStarter');
+    if (document.getElementById('qaBusiness').checked) selectedProducts.push('qaBusiness');
+    if (document.getElementById('qaAdvanced').checked) selectedProducts.push('qaAdvanced');
+window.addEventListener('DOMContentLoaded', () => {
+  checkSelections(); // ensures products show if form is already filled
+});
+
+
+    let totalPrice = 0;
+    let output = `<h2>Quote for ${companyName}</h2><p><strong>Contact:</strong> ${contactName}</p><ul>`;
+
+    const baseTierKey = billingCycle + (contractOption === 'contract' ? 'Contract' : 'NoContract');
+    const baseTier = pricingData.baseModules?.[baseTierKey];
+    const baseBand = getPriceFromBand(baseTier, convertRangeToMidpoint(monthlyOrders));
+
+    if (!baseBand) {
+      quoteSummary.innerHTML = `<p style="color:red;">Pricing not available for this order volume.</p>`;
+      return;
+    }
+
+    for (const product of selectedProducts) {
+      let price = 0;
+
+      if (baseBand[product] !== undefined) {
+        price = baseBand[product];
+      } else if (pricingData.addOns[product]) {
+        const source = product === 'social' ? pageViews : monthlyOrders;
+        const band = getPriceFromBand(pricingData.addOns[product], source);
+        if (band) price = band.price;
+      } else if (product === 'security') {
+        price = pricingData.trustGuard?.totalWebsiteProtection?.[billingCycle] || 0;
+      }
+
+      const labelMap = {
+        seller: "Seller Ratings",
+        product: "Product Reviews",
+        productWithSeller: "PS Bundle",
+        review: "Review Destinations",
+        security: "Website Security",
+        sessions: "SJ Direct Visits",
+        social: "Social Evidence",
+        walmartSyndication: "Walmart Syndication",
+        qaStarter: "Q&A Starter",
+        qaBusiness: "Q&A Business",
+        qaAdvanced: "Q&A Advanced"
+      };
+
+      output += `<li>${labelMap[product]}: $${price.toFixed(2)}</li>`;
+      totalPrice += price;
+    }
+
+    output += `</ul><h3>Total Price: $${totalPrice.toFixed(2)}</h3>`;
+    quoteSummary.innerHTML = output;
+    quoteSummary.style.display = 'block';
+});
+
+  });
+});
+
+</script>
+};
